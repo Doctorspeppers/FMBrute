@@ -50,7 +50,7 @@ try:
 			sig = "api_key=882a8490361da98702bf97a021ddc14dcredentials_type=passwordemail="+id+"format=JSONgenerate_machine_id=1generate_session_cookies=1locale=en_USmethod=auth.loginpassword="+password+"return_ssl_resources=0v=1.0"+API_SECRET
 			xx = hashlib.md5(sig.encode(encoding="UTF-8",errors="strict")).hexdigest()
 			data = {"api_key":"882a8490361da98702bf97a021ddc14d","credentials_type":"password","email":id,"format":"JSON","generate_machine_id":"1","generate_session_cookies":"1","locale":"en_US","method":"auth.login","password":password,"return_ssl_resources":"0","v":"1.0","sig":xx}
-			req = [{"https://api.facebook.com/restserver.php":{"GET":data}}]
+			req = [{"https://api.facebook.com/restserver.php":[data,{}]}]
 			prox.setReq(req)
 			prox.doRequests()
 			# Another error handle response:
